@@ -1,0 +1,652 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { Volume2, VolumeX, Play, Pause } from 'lucide-react';
+
+const UCTIndex = () => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [activeTrack, setActiveTrack] = useState(null);
+  const [glitchActive, setGlitchActive] = useState(false);
+  const [scanlinePosition, setScanlinePosition] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [audioDuration, setAudioDuration] = useState(0);
+  const canvasRef = useRef(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Tracks data with audio URLs (placeholder for now)
+  const tracks = [
+    {
+      id: 1,
+      title: "MONDO VECCHIO",
+      subtitle: "La lucidità amara",
+      duration: "3:21",
+      audioUrl: "/audio/mondo-vecchio.mp3", // Placeholder
+      color: "#dc2626",
+      lyrics: `Tutti vogliono un mondo nuovo 
+Io voglio quello vecchio 
+Perdono solo la persona dietro allo specchio
+Dopo che sorrido come un maledetto 
+Ti giuro lo detto io non smetto 
+Può cambiarmi il volto e pure l'aspetto 
+Il destino lo affetto lo affetto di netto
+Ho pochi sogni nel cassetto
+Ma sono veri come il mio affetto 
+Mentirei se dicessi che non voglio soldi 
+Ma in questo mondo fai ben poco senza quei fottuti fogli
+Non voglio essere come molti 
+Io voglio essere unico anche se siamo troppi 
+Non invento fatti mi esprimo come i gesti
+come i matti diresti
+Per la felicità tu cosa daresti
+A noi basta così poco 
+Stare svegli mentre tutto va a fuoco
+Mettersi sul bordo per sentire meglio il vuoto
+Vedere i colori legarsi e  sfumarsi un attimo dopo
+Viaggio con la mente pure senza corpo 
+Perché per la fantasia basta solo un sogno 
+Senza bagagli viaggio leggero tanto cosa porto 
+Viaggio con due monete come un morto`,
+      excerpt: "Viaggio con la mente pure senza corpo / Perché per la fantasia basta solo un sogno"
+    },
+    {
+      id: 2,
+      title: "ANIME PERDUTE",
+      subtitle: "Il loop immenso",
+      duration: "2:58",
+      audioUrl: "/audio/anime-perdute.mp3", // Placeholder
+      color: "#dc2626",
+      lyrics: `Siamo solo anime perdute dentro la routine 
+È il loop immenso
+In questo posto conta poco ciò che penso 
+O cosa ho perso 
+conta solo avere senso
+Il sesto senso
+Ho il vuoto immerso 
+dentro me stesso
+Sono Solo ricordi
+sparsi come stelle nell'universo 
+Ciò che è vuoto per me' e pieno e viceversa
+È Un illusione della realtà ben diversa
+Come una magia cambia dal punto di vista
+La realtà è un allucinazione condivisa
+Ma con qualche svista 
+Non è una regola mica è fissa
+A volte ci sta a volte costa troppo (costa troppo)
+
+[Rit]
+siamo unici ma tutti uguali infondo 
+a me spaventa che siamo ludici
+tutti uguali e pure con lo stesso sogno
+Ci giriamo intorno ma siamo inutili (si siamo inutili)
+siamo unici ma tutti uguali infondo 
+a me spaventa che siamo ludici
+tutti uguali e pure con lo stesso sogno
+Ci giriamo intorno (ci giriamo intorno x2)
+
+Ho la visione di un pazzo 
+A volte è meglio passar da stronzi, 
+Solo per una giusta causa
+Ma riuscirò a spezzare ste catene, 
+per poi avere una giusta pausa
+Viviamo in una pressa costante 
+Si costantemente sotto pressione 
+Ma ad una certa manca l'aria 
+A sentire i consigli di tutte ste persone (di tutte ste persone)
+
+[Rit]
+siamo unici ma tutti uguali infondo 
+a me spaventa che siamo ludici
+tutti uguali e pure con lo stesso sogno
+Ci giriamo intorno ma siamo inutili (siamo inutili)`,
+      excerpt: "Siamo unici ma tutti uguali infondo / a me spaventa che siamo ludici"
+    },
+    {
+      id: 3,
+      title: "INCUBO/SOGNO",
+      subtitle: "Il risveglio violento",
+      duration: "3:45",
+      audioUrl: "/audio/incubo-sogno.mp3", // Placeholder
+      color: "#dc2626",
+      lyrics: `Per me un incubo è vedere che 
+un sogno non si avvera
+Un paradosso in questa bufera 
+In questa era tutto è un bluff tanto che 
+fa bum mezza scena 
+La lava questa pioggia 
+Il trucco cade come sta foglia 
+Sta forgia scalda come il sole la soglia
+Di casa la ingoia come goya
+Poi sfasa come chi non ha i soldi per la spesa 
+Quindi spara su chi spera che qualcosa cambia si che qualcosa diventi vera
+Ma pure sta volta non né valsa la pena 
+Una condanna per un errore su una vita intera
+Una vita che si azzera finisce si dispera
+Urla controvento quindi nessuno che l'ascolta 
+Non esce nemmeno per buona condotta 
+Codarda sta sorte testarda 
+Storta s'impenna deraglia 
+In un sogno
+
+Una sberla presa troppo forte diventa vera nella realtà 
+Un sogno visto troppe volte poi si sa ti sveglierà 
+Non aprire certe porte oppure un incubo uscirà 
+Non aver paura delle tue paure che qua ogni paura si si avvererà 
+
+In questo mondo sono cook che esplora nuove terre
+Nuovi orizzonti 
+vedo troppi che strisciano come un verme 
+Nuovi trapper nuovi zombie 
+Ho sensazioni troppo forti 
+Se le esprimo lascio tutti sconvolti
+Un urlo come munc sopra i vostri volti
+Un branco di sordi che Sono solo balordi
+Contorti e pure deformi
+distolti. Da visioni di corpi 
+Volano in cerchio sti corvi
+Cercano carcasse gli ingordi
+Ma qua è il deserto dei gobi
+Si sa vivono in pochi
+Come dentro gli'incubi i sogni
+O fuori dalla realtà come se dormi`,
+      excerpt: "In questo mondo sono cook che esplora nuove terre / vedo troppi che strisciano come un verme"
+    }
+  ];
+
+  // Glitch effect
+  useEffect(() => {
+    const glitchInterval = setInterval(() => {
+      if (Math.random() > 0.95) {
+        setGlitchActive(true);
+        setTimeout(() => setGlitchActive(false), 100);
+      }
+    }, 2000);
+    
+    return () => clearInterval(glitchInterval);
+  }, []);
+
+  // Scanline animation
+  useEffect(() => {
+    const scanInterval = setInterval(() => {
+      setScanlinePosition(prev => (prev + 1) % 100);
+    }, 50);
+    
+    return () => clearInterval(scanInterval);
+  }, []);
+
+  // Simulate audio playback progress (replace with real audio element later)
+  useEffect(() => {
+    let interval;
+    if (isPlaying) {
+      interval = setInterval(() => {
+        setCurrentTime(prev => {
+          const maxTime = activeTrack?.id === 1 ? 201 : activeTrack?.id === 2 ? 178 : 225;
+          if (prev >= maxTime) {
+            setIsPlaying(false);
+            return 0;
+          }
+          return prev + 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isPlaying, activeTrack]);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    const drawNoise = () => {
+      const imageData = ctx.createImageData(canvas.width, canvas.height);
+      const data = imageData.data;
+      
+      for (let i = 0; i < data.length; i += 4) {
+        const noise = Math.random() * 15;
+        data[i] = noise;
+        data[i + 1] = noise;
+        data[i + 2] = noise;
+        data[i + 3] = 8;
+      }
+      
+      ctx.putImageData(imageData, 0, 0);
+      requestAnimationFrame(drawNoise);
+    };
+    
+    drawNoise();
+  }, []);
+
+  const handleTrackClick = (track) => {
+    if (activeTrack?.id === track.id) {
+      // Toggle play/pause
+      if (isPlaying) {
+        audioRef.current?.pause();
+        setIsPlaying(false);
+      } else {
+        audioRef.current?.play();
+        setIsPlaying(true);
+      }
+    } else {
+      // Switch track
+      setActiveTrack(track);
+      setIsPlaying(false);
+      setCurrentTime(0);
+      
+      // Simulate loading (replace with actual audio loading later)
+      setTimeout(() => {
+        setIsPlaying(true);
+      }, 300);
+    }
+    
+    setGlitchActive(true);
+    setTimeout(() => setGlitchActive(false), 150);
+  };
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  return (
+    <div className="relative min-h-screen bg-black text-white overflow-hidden">
+      {/* Noise Canvas */}
+      <canvas
+        ref={canvasRef}
+        className="fixed inset-0 pointer-events-none opacity-20 mix-blend-overlay"
+        style={{ zIndex: 1 }}
+      />
+      
+      {/* Scanline */}
+      <div
+        className="fixed left-0 right-0 h-1 bg-gradient-to-r from-transparent via-red-600 to-transparent opacity-20 pointer-events-none"
+        style={{
+          top: `${scanlinePosition}%`,
+          zIndex: 2,
+          transition: 'top 0.05s linear'
+        }}
+      />
+      
+      {/* Glitch overlay */}
+      {glitchActive && (
+        <div className="fixed inset-0 bg-red-600 opacity-10 pointer-events-none" style={{ zIndex: 3 }} />
+      )}
+      
+      {/* Main Content */}
+      <div className="relative z-10">
+        {/* Header */}
+        <header className="fixed top-0 left-0 right-0 border-b border-white/10 backdrop-blur-sm bg-black/50">
+          <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 bg-white flex items-center justify-center">
+                <div className="w-6 h-6 bg-black" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold tracking-tighter">UCT</h1>
+                <p className="text-xs text-gray-500 font-mono">UNO_CONTRO_TUTTI</p>
+              </div>
+            </div>
+            
+            <nav className="hidden md:flex items-center gap-6 font-mono text-sm">
+              <a href="#tracks" className="hover:text-red-600 transition-colors">TRACCE</a>
+              <a href="/bio.html" className="hover:text-red-600 transition-colors">BIO</a>
+              <a href="/press-kit.html" className="hover:text-red-600 transition-colors">PRESS_KIT</a>
+              <a href="/contatti.html" className="hover:text-red-600 transition-colors">CONTATTI</a>
+              <a href="/shop.html" className="hover:text-red-600 transition-colors opacity-50">SHOP_SOON</a>
+            </nav>
+            
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden w-10 h-10 border border-white/20 flex flex-col items-center justify-center gap-1 hover:border-red-600 transition-colors"
+            >
+              <span className={`w-5 h-0.5 bg-white transition-transform ${mobileMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`} />
+              <span className={`w-5 h-0.5 bg-white transition-opacity ${mobileMenuOpen ? 'opacity-0' : ''}`} />
+              <span className={`w-5 h-0.5 bg-white transition-transform ${mobileMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}`} />
+            </button>
+            
+            {/* Mobile Menu Dropdown */}
+            {mobileMenuOpen && (
+              <div className="absolute top-full left-0 right-0 bg-black border-b-2 border-white/10 md:hidden">
+                <nav className="flex flex-col font-mono text-sm">
+                  <a href="#tracks" className="px-6 py-4 border-b border-white/10 hover:bg-red-600/10 hover:text-red-600 transition-colors">
+                    TRACCE
+                  </a>
+                  <a href="/bio.html" className="px-6 py-4 border-b border-white/10 hover:bg-red-600/10 hover:text-red-600 transition-colors">
+                    BIO
+                  </a>
+                  <a href="/press-kit.html" className="px-6 py-4 border-b border-white/10 hover:bg-red-600/10 hover:text-red-600 transition-colors">
+                    PRESS_KIT
+                  </a>
+                  <a href="/contatti.html" className="px-6 py-4 border-b border-white/10 hover:bg-red-600/10 hover:text-red-600 transition-colors">
+                    CONTATTI
+                  </a>
+                  <a href="/shop.html" className="px-6 py-4 hover:bg-red-600/10 hover:text-red-600 transition-colors opacity-50">
+                    SHOP_SOON
+                  </a>
+                </nav>
+              </div>
+            )}
+            
+            
+            <button
+              onClick={() => setIsMuted(!isMuted)}
+              className="w-10 h-10 border border-white/20 flex items-center justify-center hover:border-red-600 transition-colors"
+            >
+              {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+            </button>
+          </div>
+        </header>
+
+        {/* Hero Section */}
+        <section className="min-h-screen flex items-center justify-center px-6 pt-20">
+          <div className="max-w-5xl w-full">
+            {/* Mask Visual - Enhanced */}
+            <div className="mb-12 flex justify-center">
+              <div className={`relative w-80 h-80 transition-all duration-300 ${glitchActive ? 'translate-x-1' : ''}`}>
+                {/* Main mask structure */}
+                <div className="absolute inset-0">
+                  {/* Head outline */}
+                  <div className="absolute inset-4 border-4 border-white rounded-t-full" />
+                  
+                  {/* Eyes - more detailed */}
+                  <div className="absolute top-24 left-20 w-16 h-10 border-4 border-white bg-black transform -skew-x-6" />
+                  <div className="absolute top-24 right-20 w-16 h-10 border-4 border-white bg-black transform skew-x-6" />
+                  
+                  {/* Eye highlights */}
+                  <div className="absolute top-26 left-24 w-3 h-3 bg-red-600" />
+                  <div className="absolute top-26 right-24 w-3 h-3 bg-red-600" />
+                  
+                  {/* Nose bridge */}
+                  <div className="absolute top-36 left-1/2 -translate-x-1/2 w-1 h-8 bg-white" />
+                  
+                  {/* Mouth area - more street style */}
+                  <div className="absolute bottom-24 left-1/2 -translate-x-1/2 w-32 h-20">
+                    <div className="absolute inset-0 border-4 border-white bg-black" />
+                    <div className="absolute top-1/2 left-0 right-0 h-1 bg-white" />
+                  </div>
+                  
+                  {/* Stitching details */}
+                  <div className="absolute top-32 left-16 w-8 h-0.5 bg-white/40" />
+                  <div className="absolute top-32 right-16 w-8 h-0.5 bg-white/40" />
+                  <div className="absolute top-48 left-12 w-0.5 h-8 bg-white/40" />
+                  <div className="absolute top-48 right-12 w-0.5 h-8 bg-white/40" />
+                </div>
+                
+                {/* Glitch effect layers */}
+                {glitchActive && (
+                  <>
+                    <div className="absolute inset-0 opacity-60">
+                      <div className="absolute inset-4 border-4 border-red-600 rounded-t-full translate-x-2" />
+                    </div>
+                    <div className="absolute inset-0 opacity-40">
+                      <div className="absolute inset-4 border-4 border-cyan-400 rounded-t-full -translate-x-2" />
+                    </div>
+                  </>
+                )}
+                
+                {/* Static noise overlay on mask */}
+                <div className="absolute inset-0 opacity-5 mix-blend-overlay bg-repeat" 
+                     style={{
+                       backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+                       backgroundSize: '128px 128px'
+                     }}
+                />
+              </div>
+            </div>
+
+            {/* Title */}
+            <div className="text-center mb-16">
+              <h2 className={`text-7xl md:text-9xl font-black tracking-tighter mb-4 transition-all duration-150 ${glitchActive ? 'blur-sm' : ''}`}>
+                ZERO<span className="text-red-600">50</span>
+              </h2>
+              <div className="font-mono text-sm md:text-base text-gray-500 space-y-1">
+                <p>/// UNO_CONTRO_TUTTI.EXE</p>
+                <p className="text-xs">LOADING... █████████░ 90%</p>
+              </div>
+            </div>
+
+            {/* CTA */}
+            <div className="flex justify-center gap-4">
+              <button className="px-8 py-4 bg-white text-black font-bold hover:bg-red-600 hover:text-white transition-all duration-300 font-mono text-sm">
+                ASCOLTA_ORA
+              </button>
+              <button className="px-8 py-4 border-2 border-white hover:border-red-600 hover:text-red-600 transition-all duration-300 font-mono text-sm">
+                LEGGI_I_TESTI
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* Tracks Section */}
+        <section id="tracks" className="min-h-screen py-20 px-6">
+          <div className="max-w-5xl mx-auto">
+            <h3 className="text-4xl md:text-6xl font-black mb-12 tracking-tighter">
+              TRE_<span className="text-red-600">PORTE</span>
+            </h3>
+            
+            <div className="space-y-4">
+              {tracks.map((track, index) => (
+                <div
+                  key={track.id}
+                  onClick={() => handleTrackClick(track)}
+                  className={`border-2 cursor-pointer transition-all duration-300 ${
+                    activeTrack?.id === track.id
+                      ? 'border-red-600 bg-red-600/5'
+                      : 'border-white/20 hover:border-white/60'
+                  }`}
+                >
+                  {/* Track Header */}
+                  <div className="p-6 flex items-center justify-between">
+                    <div className="flex items-center gap-6">
+                      <div className="font-mono text-3xl text-gray-600">
+                        {String(index + 1).padStart(2, '0')}
+                      </div>
+                      <div>
+                        <h4 className="text-2xl font-bold tracking-tight mb-1">{track.title}</h4>
+                        <p className="text-sm text-gray-500 font-mono">{track.subtitle}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-4">
+                      <span className="font-mono text-sm text-gray-500">{track.duration}</span>
+                      <div className={`w-12 h-12 border-2 flex items-center justify-center transition-all ${
+                        activeTrack?.id === track.id ? 'border-red-600' : 'border-white/40'
+                      }`}>
+                        {activeTrack?.id === track.id ? (
+                          <Pause size={20} className="text-red-600" />
+                        ) : (
+                          <Play size={20} />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Expanded Content */}
+                  {activeTrack?.id === track.id && (
+                    <div className="border-t-2 border-white/10 bg-black/40 animate-in fade-in duration-300">
+                      {/* Audio Player Bar */}
+                      <div className="p-6 border-b-2 border-white/10">
+                        <div className="flex items-center gap-4 mb-4">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setIsPlaying(!isPlaying);
+                            }}
+                            className="w-12 h-12 border-2 border-red-600 flex items-center justify-center hover:bg-red-600 transition-colors"
+                          >
+                            {isPlaying ? <Pause size={20} /> : <Play size={20} />}
+                          </button>
+                          
+                          <div className="flex-1">
+                            {/* Progress Bar */}
+                            <div className="relative h-2 bg-white/10 cursor-pointer group">
+                              <div 
+                                className="absolute top-0 left-0 h-full bg-red-600 transition-all"
+                                style={{ width: `${(currentTime / 201) * 100}%` }} // 201 seconds = 3:21
+                              />
+                              <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            </div>
+                            
+                            {/* Time Display */}
+                            <div className="flex justify-between mt-2 font-mono text-xs text-gray-500">
+                              <span>{formatTime(currentTime)}</span>
+                              <span>{track.duration}</span>
+                            </div>
+                          </div>
+                          
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setIsMuted(!isMuted);
+                            }}
+                            className="w-10 h-10 border border-white/20 flex items-center justify-center hover:border-red-600 transition-colors"
+                          >
+                            {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+                          </button>
+                        </div>
+                        
+                        {/* Waveform Visualization (Static for now) */}
+                        <div className="flex items-center gap-0.5 h-12 justify-center">
+                          {[...Array(60)].map((_, i) => (
+                            <div
+                              key={i}
+                              className={`w-1 bg-red-600 transition-all ${
+                                isPlaying ? 'animate-pulse' : ''
+                              }`}
+                              style={{
+                                height: `${Math.random() * 100}%`,
+                                opacity: i < (currentTime / 201) * 60 ? 1 : 0.3,
+                                animationDelay: `${i * 0.02}s`
+                              }}
+                            />
+                          ))}
+                        </div>
+                        
+                        {/* Spotify/Streaming Links (Placeholder) */}
+                        <div className="mt-4 flex gap-3 font-mono text-xs">
+                          <a href="#" className="px-4 py-2 bg-green-600 hover:bg-green-700 transition-colors">
+                            SPOTIFY
+                          </a>
+                          <a href="#" className="px-4 py-2 bg-red-600 hover:bg-red-700 transition-colors">
+                            YOUTUBE
+                          </a>
+                          <a href="#" className="px-4 py-2 bg-orange-600 hover:bg-orange-700 transition-colors">
+                            SOUNDCLOUD
+                          </a>
+                        </div>
+                      </div>
+                      
+                      {/* Lyrics */}
+                      <div className="p-6">
+                        <h5 className="font-mono text-sm text-red-600 mb-4">/// TESTO_COMPLETO</h5>
+                        <div className="font-mono text-sm leading-relaxed text-gray-400 whitespace-pre-line">
+                          {track.lyrics}
+                        </div>
+                        <div className="mt-6 p-4 border-l-4 border-red-600 bg-red-600/5">
+                          <p className="text-sm italic">"{track.excerpt}"</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* About Section */}
+        <section id="about" className="min-h-screen py-20 px-6 bg-white text-black">
+          <div className="max-w-5xl mx-auto">
+            <h3 className="text-4xl md:text-6xl font-black mb-12 tracking-tighter">
+              IL_<span className="text-red-600">MANIFESTO</span>
+            </h3>
+            
+            <div className="grid md:grid-cols-2 gap-12">
+              <div>
+                <h4 className="font-mono text-sm mb-4 text-gray-600">/// ESSENZA</h4>
+                <p className="text-xl leading-relaxed mb-6">
+                  Non è ribellione. È vedere attraverso. Ogni traccia è un'osservazione, non un urlo. 
+                  Chi sta sul bordo per sentire meglio il vuoto sa di cosa parlo.
+                </p>
+              </div>
+              
+              <div>
+                <h4 className="font-mono text-sm mb-4 text-gray-600">/// METODO</h4>
+                <p className="text-xl leading-relaxed mb-6">
+                  Dopo tempo dedicato a cose banali, questo è il progetto impegnato. 
+                  Semi e scintille. Chi deve capire, capisce.
+                </p>
+              </div>
+            </div>
+            
+            <div className="mt-16 p-8 border-4 border-black">
+              <p className="font-mono text-sm mb-4">ZERO50.SYS</p>
+              <p className="text-2xl md:text-4xl font-bold leading-tight">
+                "La realtà è un'allucinazione condivisa. Ma con qualche svista."
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Shop Preview Section */}
+        <section id="shop" className="py-20 px-6 border-t-4 border-white/10">
+          <div className="max-w-5xl mx-auto text-center">
+            <h3 className="text-4xl md:text-6xl font-black mb-8 tracking-tighter opacity-50">
+              CATALOGO_<span className="text-red-600">SOON</span>
+            </h3>
+            <p className="font-mono text-sm text-gray-600 mb-8">
+              // Il museo aprirà il suo banco. Non uno shop. Un catalogo.
+            </p>
+            <div className="grid md:grid-cols-3 gap-6 opacity-30">
+              <div className="border-2 border-white/20 aspect-square flex items-center justify-center">
+                <span className="font-mono text-xs">VINYL_01</span>
+              </div>
+              <div className="border-2 border-white/20 aspect-square flex items-center justify-center">
+                <span className="font-mono text-xs">MERCH_01</span>
+              </div>
+              <div className="border-2 border-white/20 aspect-square flex items-center justify-center">
+                <span className="font-mono text-xs">PRINT_01</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="border-t-2 border-white/10 py-8 px-6">
+          <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="font-mono text-xs text-gray-600">
+              <p>© 2025 UCT // ZERO50</p>
+              <p className="mt-1">UNO_CONTRO_TUTTI.EXE v1.0</p>
+            </div>
+            
+            <div className="flex gap-6 font-mono text-xs">
+              <a href="https://instagram.com/zero50_uct" target="_blank" rel="noopener noreferrer" className="hover:text-red-600 transition-colors">INSTAGRAM</a>
+              <a href="https://open.spotify.com/artist/zero50" target="_blank" rel="noopener noreferrer" className="hover:text-red-600 transition-colors">SPOTIFY</a>
+              <a href="https://youtube.com/@zero50uct" target="_blank" rel="noopener noreferrer" className="hover:text-red-600 transition-colors">YOUTUBE</a>
+            </div>
+            
+            <div className="font-mono text-xs text-gray-600">
+              <p>POWERED_BY <span className="text-red-600">EAR_MARKETING</span></p>
+            </div>
+          </div>
+        </footer>
+      </div>
+
+      {/* Mobile Menu Toggle (hidden for now) */}
+      <style jsx>{`
+        @keyframes glitch {
+          0%, 100% { transform: translate(0); }
+          33% { transform: translate(-2px, 2px); }
+          66% { transform: translate(2px, -2px); }
+        }
+        
+        .animate-glitch {
+          animation: glitch 0.3s infinite;
+        }
+      `}</style>
+    </div>
+  );
+};
+
+export default UCTIndex;
