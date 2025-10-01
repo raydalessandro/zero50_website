@@ -6,572 +6,63 @@
     <title>Press Kit - Zero50 | UCT</title>
     <meta name="description" content="Press Kit ufficiale di Zero50 - UCT. Download materiale stampa, bio, foto, contatti media.">
     
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Space Mono', monospace;
-        }
-        
-        :root {
-            --nero: #000;
-            --bianco: #fff;
-            --rosso: #dc2626;
-            --grigio-scuro: #1a1a1a;
-        }
-        
-        body {
-            background: var(--nero);
-            color: var(--bianco);
-            overflow-x: hidden;
-        }
-        
-        /* [Copy all the same base styles from bio.html: noise, scanlines, header, etc.] */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0.03;
-            z-index: 1;
-            pointer-events: none;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        }
-        
-        .scanlines {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(transparent 50%, rgba(220, 38, 38, 0.02) 50%);
-            background-size: 100% 4px;
-            pointer-events: none;
-            z-index: 2;
-            animation: scan 8s linear infinite;
-        }
-        
-        @keyframes scan {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(100%); }
-        }
-        
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            background: rgba(0, 0, 0, 0.95);
-            border-bottom: 1px solid var(--rosso);
-            backdrop-filter: blur(10px);
-        }
-        
-        .header-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo-link {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            text-decoration: none;
-            color: var(--bianco);
-        }
-        
-        .logo-square {
-            width: 40px;
-            height: 40px;
-            background: var(--bianco);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .logo-square::after {
-            content: '';
-            width: 24px;
-            height: 24px;
-            background: var(--nero);
-        }
-        
-        nav {
-            display: flex;
-            gap: 2rem;
-        }
-        
-        nav a {
-            color: var(--bianco);
-            text-decoration: none;
-            font-size: 0.85rem;
-            transition: color 0.3s;
-            position: relative;
-        }
-        
-        nav a::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--rosso);
-            transition: width 0.3s;
-        }
-        
-        nav a:hover::after,
-        nav a.active::after {
-            width: 100%;
-        }
-        
-        nav a.active {
-            color: var(--rosso);
-        }
-        
-        main {
-            position: relative;
-            z-index: 10;
-            padding-top: 120px;
-            min-height: 100vh;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem 6rem;
-        }
-        
-        /* Hero */
-        .hero {
-            margin-bottom: 6rem;
-        }
-        
-        .hero h2 {
-            font-size: clamp(4rem, 10vw, 8rem);
-            font-weight: 900;
-            line-height: 0.9;
-            letter-spacing: -0.05em;
-            margin-bottom: 1rem;
-        }
-        
-        .hero .press {
-            color: var(--bianco);
-        }
-        
-        .hero .kit {
-            color: var(--rosso);
-            text-shadow: 0 0 30px rgba(220, 38, 38, 0.6);
-        }
-        
-        .subtitle {
-            font-size: 1.2rem;
-            color: #666;
-        }
-        
-        /* Quick Bio Section */
-        .quick-bio {
-            background: var(--grigio-scuro);
-            padding: 4rem;
-            border-left: 4px solid var(--rosso);
-            margin-bottom: 6rem;
-            position: relative;
-        }
-        
-        .quick-bio::before {
-            content: 'BIO';
-            position: absolute;
-            top: -3rem;
-            left: 4rem;
-            font-size: 10rem;
-            font-weight: 900;
-            color: transparent;
-            -webkit-text-stroke: 2px rgba(220, 38, 38, 0.2);
-            z-index: 0;
-        }
-        
-        .quick-bio h3 {
-            font-size: 2rem;
-            color: var(--rosso);
-            margin-bottom: 2rem;
-            text-transform: uppercase;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .bio-text {
-            font-size: 1.2rem;
-            line-height: 1.8;
-            color: #ccc;
-            margin-bottom: 2rem;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .bio-text strong {
-            color: var(--bianco);
-        }
-        
-        .copy-btn {
-            background: var(--rosso);
-            color: var(--bianco);
-            border: none;
-            padding: 1rem 2rem;
-            font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: all 0.3s;
-            font-size: 0.9rem;
-        }
-        
-        .copy-btn:hover {
-            background: var(--bianco);
-            color: var(--nero);
-        }
-        
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 6rem;
-        }
-        
-        .stat-card {
-            background: var(--grigio-scuro);
-            border: 2px solid #333;
-            padding: 3rem 2rem;
-            text-align: center;
-            transition: all 0.3s;
-        }
-        
-        .stat-card:hover {
-            border-color: var(--rosso);
-            transform: translateY(-5px);
-        }
-        
-        .stat-number {
-            font-size: 4rem;
-            font-weight: 900;
-            color: var(--rosso);
-            line-height: 1;
-            margin-bottom: 1rem;
-        }
-        
-        .stat-label {
-            font-size: 0.8rem;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-        
-        /* Section Titles */
-        .section-title {
-            font-size: 3rem;
-            font-weight: 900;
-            margin-bottom: 3rem;
-            text-transform: uppercase;
-            position: relative;
-            display: inline-block;
-        }
-        
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--rosso);
-        }
-        
-        /* Discography */
-        .disco-list {
-            display: grid;
-            gap: 2rem;
-            margin-bottom: 6rem;
-        }
-        
-        .disco-item {
-            background: var(--grigio-scuro);
-            padding: 2rem;
-            border-left: 4px solid var(--rosso);
-            transition: all 0.3s;
-        }
-        
-        .disco-item:hover {
-            background: #222;
-            padding-left: 2.5rem;
-        }
-        
-        .disco-item h4 {
-            font-size: 1.8rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .disco-meta {
-            font-size: 0.85rem;
-            color: #666;
-            margin-bottom: 1rem;
-        }
-        
-        .disco-desc {
-            color: #ccc;
-            line-height: 1.6;
-        }
-        
-        /* Assets Grid */
-        .assets-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 6rem;
-        }
-        
-        .asset-card {
-            background: var(--grigio-scuro);
-            border: 2px solid #333;
-            padding: 2.5rem;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .asset-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(220, 38, 38, 0.1), transparent);
-            transition: left 0.5s;
-        }
-        
-        .asset-card:hover::before {
-            left: 100%;
-        }
-        
-        .asset-card:hover {
-            border-color: var(--rosso);
-        }
-        
-        .asset-card.featured {
-            border-color: var(--rosso);
-            background: rgba(220, 38, 38, 0.05);
-        }
-        
-        .asset-card h4 {
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            color: var(--bianco);
-        }
-        
-        .asset-card.featured h4 {
-            color: var(--rosso);
-        }
-        
-        .asset-desc {
-            font-size: 0.9rem;
-            color: #999;
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-        }
-        
-        .download-btn {
-            background: var(--bianco);
-            color: var(--nero);
-            border: none;
-            padding: 0.8rem 1.5rem;
-            font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            transition: all 0.3s;
-            width: 100%;
-        }
-        
-        .download-btn:hover {
-            background: var(--rosso);
-            color: var(--bianco);
-        }
-        
-        .asset-card.featured .download-btn {
-            background: var(--rosso);
-            color: var(--bianco);
-        }
-        
-        .asset-card.featured .download-btn:hover {
-            background: var(--bianco);
-            color: var(--nero);
-        }
-        
-        /* Quotes Section */
-        .quotes-section {
-            background: var(--bianco);
-            color: var(--nero);
-            padding: 6rem 4rem;
-            margin: 6rem 0;
-            position: relative;
-        }
-        
-        .quotes-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: var(--rosso);
-        }
-        
-        .quotes-section h3 {
-            font-size: 3rem;
-            font-weight: 900;
-            margin-bottom: 3rem;
-            text-transform: uppercase;
-        }
-        
-        .quote-item {
-            font-size: 1.4rem;
-            font-style: italic;
-            line-height: 1.6;
-            padding: 2rem 0;
-            padding-left: 3rem;
-            border-left: 4px solid var(--nero);
-            margin-bottom: 2rem;
-        }
-        
-        /* Contact Section */
-        .contact-section {
-            background: var(--grigio-scuro);
-            border: 2px solid var(--rosso);
-            padding: 4rem;
-            margin-top: 6rem;
-        }
-        
-        .contact-section h3 {
-            font-size: 2.5rem;
-            color: var(--rosso);
-            margin-bottom: 2rem;
-            text-transform: uppercase;
-        }
-        
-        .contact-info {
-            display: grid;
-            gap: 1.5rem;
-            font-size: 1.2rem;
-        }
-        
-        .contact-info p strong {
-            color: var(--bianco);
-            display: inline-block;
-            min-width: 180px;
-        }
-        
-        .contact-info a {
-            color: var(--rosso);
-            text-decoration: none;
-            transition: opacity 0.3s;
-        }
-        
-        .contact-info a:hover {
-            opacity: 0.7;
-        }
-        
-        .contact-meta {
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid #333;
-            font-size: 0.9rem;
-            color: #999;
-        }
-        
-        /* Footer */
-        footer {
-            border-top: 1px solid var(--rosso);
-            padding: 3rem 2rem;
-        }
-        
-        .footer-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .footer-info {
-            font-size: 0.75rem;
-            color: #666;
-        }
-        
-        .footer-social {
-            display: flex;
-            gap: 2rem;
-            font-size: 0.85rem;
-        }
-        
-        .footer-social a {
-            color: #666;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        .footer-social a:hover {
-            color: var(--rosso);
-        }
-        
-        @media (max-width: 768px) {
-            .quick-bio,
-            .quotes-section,
-            .contact-section {
-                padding: 2rem;
-            }
-            
-            .section-title {
-                font-size: 2rem;
-            }
-            
-            nav {
-                display: none;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="scanlines"></div>
+    <!-- Noise Canvas -->
+    <canvas id="noiseCanvas"></canvas>
     
-    <header>
+    <!-- Scanline -->
+    <div class="scanline"></div>
+    
+    <!-- Header -->
+    <header class="site-header">
         <div class="header-content">
-            <a href="/index.html" class="logo-link">
-                <div class="logo-square"></div>
-                <div style="font-size: 1.2rem; font-weight: bold; letter-spacing: -0.05em;">UCT</div>
-            </a>
+            <div class="logo-container">
+                <a href="index.html" class="logo-link">
+                    <div class="logo-square">
+                        <div class="logo-inner"></div>
+                    </div>
+                    <div class="logo-text">
+                        <h1>UCT</h1>
+                        <p>UNO_CONTRO_TUTTI</p>
+                    </div>
+                </a>
+            </div>
             
+            <nav class="main-nav">
+                <a href="index.html#tracks">TRACCE</a>
+                <a href="bio.html">BIO</a>
+                <a href="press-kit.html" class="active">PRESS_KIT</a>
+                <a href="contatti.html">CONTATTI</a>
+                <a href="shop.html" class="disabled">SHOP_SOON</a>
+            </nav>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        
+        <div class="mobile-menu" id="mobileMenu">
             <nav>
-                <a href="/index.html#tracks">TRACCE</a>
-                <a href="/bio.html">BIO</a>
-                <a href="/press-kit.html" class="active">PRESS_KIT</a>
-                <a href="/contatti.html">CONTATTI</a>
+                <a href="index.html#tracks">TRACCE</a>
+                <a href="bio.html">BIO</a>
+                <a href="press-kit.html" class="active">PRESS_KIT</a>
+                <a href="contatti.html">CONTATTI</a>
+                <a href="shop.html" class="disabled">SHOP_SOON</a>
             </nav>
         </div>
     </header>
 
-    <main>
+    <!-- Main -->
+    <main class="presskit-main">
         <div class="container">
             
-            <div class="hero">
-                <h2><span class="press">PRESS_</span><span class="kit">KIT</span></h2>
+            <!-- Hero -->
+            <div class="page-hero">
+                <h2><span class="white">PRESS_</span><span class="red">KIT</span></h2>
                 <p class="subtitle">/// Materiale_stampa_ufficiale.zip</p>
             </div>
 
@@ -606,7 +97,7 @@
             </div>
 
             <!-- Discography -->
-            <h3 class="section-title">Discografia.json</h3>
+            <h3 class="section-title-alt">Discografia.json</h3>
             <div class="disco-list">
                 <div class="disco-item">
                     <h4>MONDO VECCHIO</h4>
@@ -626,7 +117,7 @@
             </div>
 
             <!-- Assets -->
-            <h3 class="section-title">Download_Assets</h3>
+            <h3 class="section-title-alt">Download_Assets</h3>
             <div class="assets-grid">
                 <div class="asset-card">
                     <h4>LOGO_PACK.zip</h4>
@@ -671,12 +162,12 @@
             </div>
 
             <!-- Contact -->
-            <div class="contact-section">
+            <div class="press-contact">
                 <h3>Contatti_Media</h3>
-                <div class="contact-info">
+                <div class="contact-info-grid">
                     <p><strong>Email Stampa:</strong> <a href="mailto:press@uctzero50.com">press@uctzero50.com</a></p>
                     <p><strong>Booking:</strong> <a href="mailto:booking@uctzero50.com">booking@uctzero50.com</a></p>
-                    <p><strong>General Info:</strong> <a href="/contatti.html">Modulo Contatti</a></p>
+                    <p><strong>General Info:</strong> <a href="contatti.html">Modulo Contatti</a></p>
                 </div>
                 <div class="contact-meta">
                     <p><strong>Collaborazioni:</strong> Vibes Studio (Produzione)</p>
@@ -687,7 +178,8 @@
         </div>
     </main>
 
-    <footer>
+    <!-- Footer -->
+    <footer class="site-footer">
         <div class="footer-content">
             <div class="footer-info">
                 <p>© 2025 UCT // ZERO50</p>
@@ -695,13 +187,18 @@
             </div>
             
             <div class="footer-social">
-                <a href="https://instagram.com/zero50_uct" target="_blank">INSTAGRAM</a>
-                <a href="https://open.spotify.com/artist/zero50" target="_blank">SPOTIFY</a>
-                <a href="https://youtube.com/@zero50uct" target="_blank">YOUTUBE</a>
+                <a href="https://instagram.com/zero50_uct" target="_blank" rel="noopener noreferrer">INSTAGRAM</a>
+                <a href="https://open.spotify.com/artist/zero50" target="_blank" rel="noopener noreferrer">SPOTIFY</a>
+                <a href="https://youtube.com/@zero50uct" target="_blank" rel="noopener noreferrer">YOUTUBE</a>
+            </div>
+            
+            <div class="footer-powered">
+                <p>POWERED_BY <span class="red">EAR_MARKETING</span></p>
             </div>
         </div>
     </footer>
 
+    <script src="js/main.js"></script>
     <script>
         function copyBio() {
             const bioText = "Zero50 è l'osservatore disilluso del rap italiano contemporaneo. Il progetto UCT (Uno Contro Tutti) emerge con tre tracce che decostruiscono il loop della routine quotidiana. Non ribellione fine a sé stessa, ma lucida osservazione di una realtà che si svela come 'allucinazione condivisa con qualche svista'. Prodotto in collaborazione con Vibes Studio, il sound minimalista e chirurgico amplifica testi che scavano piuttosto che urlare. Chi deve capire, capisce.";
@@ -712,4 +209,4 @@
         }
     </script>
 </body>
-</html>
+                                  </html>
