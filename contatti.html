@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contatti - Zero50 | UCT</title>
+    <meta name="description" content="Contatta Zero50. Media, collaborazioni, info generali.">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Space Mono', monospace;
+        }
+        
+        :root {
+            --nero: #000;
+            --bianco: #fff;
+            --rosso: #dc2626;
+            --grigio-scuro: #1a1a1a;
+        }
+        
+        body {
+            background: var(--nero);
+            color: var(--bianco);
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.03;
+            z-index: 1;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+        
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(transparent 50%, rgba(220, 38, 38, 0.02) 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 2;
+            animation: scan 8s linear infinite;
+        }
+        
+        @keyframes scan {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(100%); }
+        }
+        
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.95);
+            border-bottom: 1px solid var(--rosso);
+            backdrop-filter: blur(10px);
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+            color: var(--bianco);
+        }
+        
+        .logo-square {
+            width: 40px;
+            height: 40px;
+            background: var(--bianco);
+            display: flex;
+            align-items: center;
+            justify-center: center;
+        }
+        
+        .logo-square::after {
+            content: '';
+            width: 24px;
+            height: 24px;
+            background: var(--nero);
+        }
+        
+        .logo-text h1 {
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: -0.05em;
+        }
+        
+        .logo-text p {
+            font-size: 0.65rem;
+            color: #666;
+        }
+        
+        nav {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        nav a {
+            color: var(--bianco);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--rosso);
+            transition: width 0.3s;
+        }
+        
+        nav a:hover::after,
+        nav a.active::after {
+            width: 100%;
+        }
+        
+        nav a.active {
+            color: var(--rosso);
+        }
+        
+        main {
+            position: relative;
+            z-index: 10;
+            padding-top: 120px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 6rem;
+        }
+        
+        .hero h2 {
+            font-size: clamp(4rem, 10vw, 8rem);
+            font-weight: 900;
+            line-height: 0.9;
+            letter-spacing: -0.05em;
+            margin-bottom: 1rem;
+        }
+        
+        .hero .contact {
+            color: var(--bianco);
+        }
+        
+        .hero .us {
+            color: var(--rosso);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 6rem;
+        }
+        
+        .quick-contact {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 6rem;
+        }
+        
+        .contact-card {
+            background: var(--grigio-scuro);
+            border: 2px solid #333;
+            padding: 3rem;
+            text-decoration: none;
+            color: var(--bianco);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            display: block;
+        }
+        
+        .contact-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(220, 38, 38, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        
+        .contact-card:hover::before {
+            opacity: 1;
+        }
+        
+        .contact-card:hover {
+            border-color: var(--rosso);
+            transform: translateY(-5px);
+        }
+        
+        .contact-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+        
+        .contact-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+        
+        .contact-card p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .form-section {
+            background: var(--grigio-scuro);
+            border-left: 4px solid var(--rosso);
+            padding: 4rem;
+            margin-bottom: 6rem;
+        }
+        
+        .form-section h3 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 3rem;
+            text-transform: uppercase;
+            color: var(--rosso);
+        }
+        
+        .form-grid {
+            display: grid;
+            gap: 2rem;
+        }
+        
+        .form-group {
+            display: grid;
+            gap: 0.5rem;
+        }
+        
+        .form-group label {
+            font-size: 0.85rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid #333;
+            color: var(--bianco);
+            padding: 1rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--rosso);
+            background: rgba(220, 38, 38, 0.05);
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+        
+        .privacy-check {
+            display: flex;
+            align-items: start;
+            gap: 1rem;
+        }
+        
+        .privacy-check input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--rosso);
+        }
+        
+        .privacy-check label {
+            font-size: 0.75rem;
+            color: #999;
+            line-height: 1.6;
+            cursor: pointer;
+        }
+        
+        .privacy-check a {
+            color: var(--rosso);
+            text-decoration: none;
+        }
+        
+        .submit-btn {
+            background: var(--rosso);
+            color: var(--bianco);
+            border: none;
+            padding: 1.2rem 3rem;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        
+        .submit-btn:hover {
+            background: var(--bianco);
+            color: var(--nero);
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .form-status {
+            padding: 1.5rem;
+            margin-top: 2rem;
+            border: 2px solid;
+            display: none;
+        }
+        
+        .form-status.success {
+            border-color: #22c55e;
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+        }
+        
+        .form-status.error {
+            border-color: var(--rosso);
+            background: rgba(220, 38, 38, 0.1);
+            color: var(--rosso);
+        }
+        
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 6rem;
+        }
+        
+        .social-card {
+            background: var(--grigio-scuro);
+            border: 2px solid #333;
+            padding: 2.5rem;
+            text-align: center;
+            text-decoration: none;
+            color: var(--bianco);
+            transition: all 0.3s;
+            display: block;
+        }
+        
+        .social-card:hover {
+            border-color: var(--rosso);
+            background: rgba(220, 38, 38, 0.05);
+        }
+        
+        .social-icon {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 1rem;
+        }
+        
+        .social-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+        
+        .social-handle {
+            font-size: 0.75rem;
+            color: #666;
+        }
+        
+        .response-time {
+            background: var(--grigio-scuro);
+            border: 2px solid #333;
+            padding: 3rem;
+            text-align: center;
+        }
+        
+        .response-label {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        .response-number {
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--rosso);
+            line-height: 1;
+        }
+        
+        .response-note {
+            margin-top: 1.5rem;
+            font-size: 0.8rem;
+            color: #999;
+        }
+        
+        footer {
+            border-top: 1px solid var(--rosso);
+            padding: 3rem 2rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-info {
+            font-size: 0.75rem;
+            color: #666;
+        }
+        
+        .footer-powered {
+            font-size: 0.75rem;
+            color: #666;
+        }
+        
+        .footer-powered span {
+            color: var(--rosso);
+        }
+        
+        @media (max-width: 768px) {
+            .form-section {
+                padding: 2rem;
+            }
+            
+            .quick-contact,
+            .social-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            nav {
+                display: none;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="scanlines"></div>
+    
+    <header>
+        <div class="header-content">
+            <a href="/index.html" class="logo-link">
+                <div class="logo-square"></div>
+                <div class="logo-text">
+                    <h1>UCT</h1>
+                    <p>UNO_CONTRO_TUTTI</p>
+                </div>
+            </a>
+            
+            <nav>
+                <a href="/index.html#tracks">TRACCE</a>
+                <a href="/bio.html">BIO</a>
+                <a href="/press-kit.html">PRESS_KIT</a>
+                <a href="/contatti.html" class="active">CONTATTI</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+            <div class="hero">
+                <h2><span class="contact">CONTACT_</span><span class="us">US</span></h2>
+                <p class="subtitle">/// Entra_in_connessione.log</p>
+            </div>
+
+            <!-- Quick Contact Cards -->
+            <div class="quick-contact">
+                <a href="mailto:press@uctzero50.com" class="contact-card">
+                    <span class="contact-icon">📰</span>
+                    <h3>Stampa</h3>
+                    <p>press@uctzero50.com</p>
+                </a>
+                
+                <a href="mailto:booking@uctzero50.com" class="contact-card">
+                    <span class="contact-icon">🎤</span>
+                    <h3>Booking</h3>
+                    <p>booking@uctzero50.com</p>
+                </a>
+                
+                <a href="mailto:collab@uctzero50.com" class="contact-card">
+                    <span class="contact-icon">🤝</span>
+                    <h3>Collaborazioni</h3>
+                    <p>collab@uctzero50.com</p>
+                </a>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="form-section">
+                <h3>Form_Generale</h3>
+                
+                <form id="contactForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+                    <div class="form-grid">
+                        
+                        <div class="form-group">
+                            <label for="name">Nome / Progetto *</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject">Oggetto *</label>
+                            <select id="subject" name="subject" required>
+                                <option value="">Seleziona categoria...</option>
+                                <option value="press">Richiesta Stampa</option>
+                                <option value="booking">Booking / Live</option>
+                                <option value="collab">Collaborazione Artistica</option>
+                                <option value="licensing">Licensing / Sync</option>
+                                <option value="general">Info Generali</option>
+                                <option value="other">Altro</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Messaggio *</label>
+                            <textarea id="message" name="message" required></textarea>
+                        </div>
+                        
+                        <div class="privacy-check">
+                            <input type="checkbox" id="privacy" name="privacy" required>
+                            <label for="privacy">
+                                Ho letto e accetto la <a href="/privacy.html">Privacy Policy</a>. 
+                                Autorizzo il trattamento dei miei dati per rispondere alla richiesta.
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">Invia_Messaggio</button>
+                        
+                    </div>
+                    
+                    <div id="formStatus" class="form-status"></div>
+                </form>
+            </div>
+
+            <!-- Social Links -->
+            <h3 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 2rem; text-transform: uppercase;">Social_Networks</h3>
+            
+            <div class="social-grid">
+                <a href="https://instagram.com/zero50_uct" target="_blank" class="social-card">
+                    <span class="social-icon">📷</span>
+                    <div class="social-name">Instagram</div>
+                    <div class="social-handle">@zero50_uct</div>
+                </a>
+                
+                <a href="https://open.spotify.com/artist/zero50" target="_blank" class="social-card">
+                    <span class="social-icon">🎵</span>
+                    <div class="social-name">Spotify</div>
+                    <div class="social-handle">Zero50</div>
+                </a>
+                
+                <a href="https://youtube.com/@zero50uct" target="_blank" class="social-card">
+                    <span class="social-icon">📺</span>
+                    <div class="social-name">YouTube</div>
+                    <div class="social-handle">@zero50uct</div>
+                </a>
+                
+                <a href="https://soundcloud.com/zero50uct" target="_blank" class="social-card">
+                    <span class="social-icon">☁️</span>
+                    <div class="social-name">SoundCloud</div>
+                    <div class="social-handle">zero50uct</div>
+                </a>
+            </div>
+
+            <!-- Response Time -->
+            <div class="response-time">
+                <div class="response-label">Tempo Risposta Medio</div>
+                <div class="response-number">48h</div>
+                <p class="response-note">
+                    Rispondiamo a tutte le richieste serie entro 48 ore lavorative.<br>
+                    Per urgenze media: press@uctzero50.com
+                </p>
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-info">
+                <p>© 2025 UCT // ZERO50</p>
+                <p style="margin-top: 0.3rem;">CONTACT_SYSTEM v1.0</p>
+            </div>
+            
+            <div class="footer-powered">
+                <p>POWERED_BY <span>EAR_MARKETING</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Form handling
+        const form = document.getElementById('contactForm');
+        const formStatus = document.getElementById('formStatus');
+        
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = form.querySelector('.submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Invio_in_corso...';
+            
+            // Get form data
+            const formData = new FormData(form);
+            
+            try {
+                // Replace with your actual Formspree endpoint
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    formStatus.className = 'form-status success';
+                    formStatus.textContent = '✓ MESSAGGIO_INVIATO. Ti risponderemo entro 48h.';
+                    formStatus.style.display = 'block';
+                    form.reset();
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            } catch (error) {
+                formStatus.className = 'form-status error';
+                formStatus.textContent = '✗ ERRORE_INVIO. Riprova o scrivi direttamente a press@uctzero50.com';
+                formStatus.style.display = 'block';
+            }
+            
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Invia_Messaggio';
+            
+            // Hide status after 5 seconds
+            setTimeout(() => {
+                formStatus.style.display = 'none';
+            }, 5000);
+        });
+    </script>
+</body>
+</html>
