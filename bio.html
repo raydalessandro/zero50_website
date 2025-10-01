@@ -6,614 +6,114 @@
     <title>Bio - Zero50 | UCT - Uno Contro Tutti</title>
     <meta name="description" content="Chi è Zero50. Il progetto UCT. L'osservatore disilluso che ancora osserva.">
     
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Space Mono', monospace;
-        }
-        
-        :root {
-            --nero: #000;
-            --bianco: #fff;
-            --rosso: #dc2626;
-            --grigio-scuro: #1a1a1a;
-            --grigio-medio: #333;
-        }
-        
-        body {
-            background: var(--nero);
-            color: var(--bianco);
-            overflow-x: hidden;
-        }
-        
-        /* Noise Background */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0.03;
-            z-index: 1;
-            pointer-events: none;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        }
-        
-        /* Glitch Animation */
-        @keyframes glitch {
-            0%, 100% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); clip-path: inset(0 0 90% 0); }
-            40% { transform: translate(-2px, -2px); clip-path: inset(80% 0 0 0); }
-            60% { transform: translate(2px, 2px); clip-path: inset(50% 0 20% 0); }
-            80% { transform: translate(2px, -2px); clip-path: inset(10% 0 60% 0); }
-        }
-        
-        .glitch {
-            position: relative;
-        }
-        
-        .glitch::before,
-        .glitch::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0.8;
-        }
-        
-        .glitch::before {
-            animation: glitch 0.3s infinite;
-            color: var(--rosso);
-            z-index: -1;
-        }
-        
-        .glitch::after {
-            animation: glitch 0.3s infinite reverse;
-            color: cyan;
-            z-index: -2;
-        }
-        
-        /* Scanlines */
-        .scanlines {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                transparent 50%,
-                rgba(220, 38, 38, 0.02) 50%
-            );
-            background-size: 100% 4px;
-            pointer-events: none;
-            z-index: 2;
-            animation: scan 8s linear infinite;
-        }
-        
-        @keyframes scan {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(100%); }
-        }
-        
-        /* Header */
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            background: rgba(0, 0, 0, 0.95);
-            border-bottom: 1px solid var(--rosso);
-            backdrop-filter: blur(10px);
-        }
-        
-        .header-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo-link {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            text-decoration: none;
-            color: var(--bianco);
-        }
-        
-        .logo-square {
-            width: 40px;
-            height: 40px;
-            background: var(--bianco);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-        
-        .logo-square::after {
-            content: '';
-            width: 24px;
-            height: 24px;
-            background: var(--nero);
-        }
-        
-        .logo-text h1 {
-            font-size: 1.2rem;
-            font-weight: bold;
-            letter-spacing: -0.05em;
-        }
-        
-        .logo-text p {
-            font-size: 0.65rem;
-            color: #666;
-        }
-        
-        nav {
-            display: flex;
-            gap: 2rem;
-        }
-        
-        nav a {
-            color: var(--bianco);
-            text-decoration: none;
-            font-size: 0.85rem;
-            transition: color 0.3s;
-            position: relative;
-        }
-        
-        nav a::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--rosso);
-            transition: width 0.3s;
-        }
-        
-        nav a:hover::after,
-        nav a.active::after {
-            width: 100%;
-        }
-        
-        nav a.active {
-            color: var(--rosso);
-        }
-        
-        /* Main Content */
-        main {
-            position: relative;
-            z-index: 10;
-            padding-top: 120px;
-            min-height: 100vh;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-        
-        /* Hero Title */
-        .hero-title {
-            margin-bottom: 4rem;
-            position: relative;
-        }
-        
-        .hero-title h2 {
-            font-size: clamp(4rem, 12vw, 10rem);
-            font-weight: 900;
-            line-height: 0.9;
-            letter-spacing: -0.05em;
-            text-transform: uppercase;
-        }
-        
-        .hero-title .zero {
-            display: inline-block;
-            position: relative;
-        }
-        
-        .hero-title .fifty {
-            color: var(--rosso);
-            text-shadow: 0 0 20px rgba(220, 38, 38, 0.5);
-        }
-        
-        .subtitle {
-            font-size: 1.2rem;
-            color: #666;
-            margin-top: 1rem;
-        }
-        
-        /* Content Blocks */
-        .content-grid {
-            display: grid;
-            gap: 4rem;
-            margin-bottom: 6rem;
-        }
-        
-        .content-block {
-            position: relative;
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 3rem;
-            align-items: start;
-        }
-        
-        .block-number {
-            font-size: 8rem;
-            font-weight: 900;
-            color: transparent;
-            -webkit-text-stroke: 2px var(--rosso);
-            line-height: 1;
-            opacity: 0.3;
-            position: sticky;
-            top: 120px;
-        }
-        
-        .block-content {
-            padding: 2rem 0;
-        }
-        
-        .block-title {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 1.5rem;
-            color: var(--rosso);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        
-        .block-text {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: #ccc;
-        }
-        
-        .block-text strong {
-            color: var(--bianco);
-        }
-        
-        /* Quote Block */
-        .quote-block {
-            background: var(--grigio-scuro);
-            padding: 4rem;
-            margin: 6rem 0;
-            position: relative;
-            border-left: 4px solid var(--rosso);
-        }
-        
-        .quote-block::before {
-            content: '"';
-            position: absolute;
-            top: -2rem;
-            left: 2rem;
-            font-size: 10rem;
-            color: var(--rosso);
-            opacity: 0.2;
-            line-height: 1;
-        }
-        
-        .quote-text {
-            font-size: 2rem;
-            line-height: 1.4;
-            font-style: italic;
-            color: var(--bianco);
-            position: relative;
-            z-index: 1;
-        }
-        
-        .quote-author {
-            margin-top: 2rem;
-            font-size: 0.9rem;
-            color: #666;
-            text-align: right;
-        }
-        
-        /* Manifesto Section */
-        .manifesto {
-            background: var(--bianco);
-            color: var(--nero);
-            padding: 6rem 4rem;
-            margin: 6rem 0;
-            position: relative;
-        }
-        
-        .manifesto::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: var(--rosso);
-        }
-        
-        .manifesto h3 {
-            font-size: 3rem;
-            font-weight: 900;
-            margin-bottom: 3rem;
-            text-transform: uppercase;
-        }
-        
-        .manifesto-list {
-            list-style: none;
-            display: grid;
-            gap: 2rem;
-        }
-        
-        .manifesto-list li {
-            font-size: 1.3rem;
-            line-height: 1.6;
-            padding-left: 3rem;
-            position: relative;
-        }
-        
-        .manifesto-list li::before {
-            content: '→';
-            position: absolute;
-            left: 0;
-            color: var(--rosso);
-            font-weight: bold;
-            font-size: 1.5rem;
-        }
-        
-        /* Tracklist */
-        .tracklist {
-            background: var(--grigio-scuro);
-            padding: 3rem;
-            margin: 3rem 0;
-            border: 1px solid var(--rosso);
-        }
-        
-        .tracklist h4 {
-            font-size: 1.5rem;
-            color: var(--rosso);
-            margin-bottom: 2rem;
-            text-transform: uppercase;
-        }
-        
-        .track-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem 0;
-            border-bottom: 1px solid #333;
-        }
-        
-        .track-item:last-child {
-            border-bottom: none;
-        }
-        
-        .track-info strong {
-            font-size: 1.2rem;
-            display: block;
-            margin-bottom: 0.3rem;
-        }
-        
-        .track-info span {
-            color: #666;
-            font-size: 0.9rem;
-        }
-        
-        /* CTA Section */
-        .cta-section {
-            text-align: center;
-            padding: 6rem 0;
-            margin-top: 6rem;
-            border-top: 1px solid var(--rosso);
-        }
-        
-        .cta-buttons {
-            display: flex;
-            gap: 2rem;
-            justify-content: center;
-            margin-top: 3rem;
-        }
-        
-        .btn {
-            padding: 1.2rem 3rem;
-            font-size: 1rem;
-            font-weight: bold;
-            text-decoration: none;
-            text-transform: uppercase;
-            transition: all 0.3s;
-            border: 2px solid;
-            cursor: pointer;
-        }
-        
-        .btn-primary {
-            background: var(--rosso);
-            color: var(--bianco);
-            border-color: var(--rosso);
-        }
-        
-        .btn-primary:hover {
-            background: transparent;
-            color: var(--rosso);
-        }
-        
-        .btn-secondary {
-            background: transparent;
-            color: var(--bianco);
-            border-color: var(--bianco);
-        }
-        
-        .btn-secondary:hover {
-            background: var(--bianco);
-            color: var(--nero);
-        }
-        
-        /* Footer */
-        footer {
-            border-top: 1px solid var(--rosso);
-            padding: 3rem 2rem;
-            background: var(--nero);
-        }
-        
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .footer-info {
-            font-size: 0.75rem;
-            color: #666;
-        }
-        
-        .footer-social {
-            display: flex;
-            gap: 2rem;
-            font-size: 0.85rem;
-        }
-        
-        .footer-social a {
-            color: #666;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        .footer-social a:hover {
-            color: var(--rosso);
-        }
-        
-        /* Mobile */
-        @media (max-width: 768px) {
-            .content-block {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-            
-            .block-number {
-                font-size: 4rem;
-                position: static;
-            }
-            
-            .quote-block {
-                padding: 2rem;
-            }
-            
-            .quote-text {
-                font-size: 1.5rem;
-            }
-            
-            .manifesto {
-                padding: 3rem 2rem;
-            }
-            
-            .manifesto h3 {
-                font-size: 2rem;
-            }
-            
-            .manifesto-list li {
-                font-size: 1rem;
-            }
-            
-            .cta-buttons {
-                flex-direction: column;
-            }
-            
-            nav {
-                display: none;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="scanlines"></div>
+    <!-- Noise Canvas -->
+    <canvas id="noiseCanvas"></canvas>
+    
+    <!-- Scanline -->
+    <div class="scanline"></div>
     
     <!-- Header -->
-    <header>
+    <header class="site-header">
         <div class="header-content">
-            <a href="/index.html" class="logo-link">
-                <div class="logo-square"></div>
-                <div class="logo-text">
-                    <h1>UCT</h1>
-                    <p>UNO_CONTRO_TUTTI</p>
-                </div>
-            </a>
+            <div class="logo-container">
+                <a href="index.html" class="logo-link">
+                    <div class="logo-square">
+                        <div class="logo-inner"></div>
+                    </div>
+                    <div class="logo-text">
+                        <h1>UCT</h1>
+                        <p>UNO_CONTRO_TUTTI</p>
+                    </div>
+                </a>
+            </div>
             
+            <nav class="main-nav">
+                <a href="index.html#tracks">TRACCE</a>
+                <a href="bio.html" class="active">BIO</a>
+                <a href="press-kit.html">PRESS_KIT</a>
+                <a href="contatti.html">CONTATTI</a>
+                <a href="shop.html" class="disabled">SHOP_SOON</a>
+            </nav>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        
+        <div class="mobile-menu" id="mobileMenu">
             <nav>
-                <a href="/index.html#tracks">TRACCE</a>
-                <a href="/bio.html" class="active">BIO</a>
-                <a href="/press-kit.html">PRESS_KIT</a>
-                <a href="/contatti.html">CONTATTI</a>
+                <a href="index.html#tracks">TRACCE</a>
+                <a href="bio.html" class="active">BIO</a>
+                <a href="press-kit.html">PRESS_KIT</a>
+                <a href="contatti.html">CONTATTI</a>
+                <a href="shop.html" class="disabled">SHOP_SOON</a>
             </nav>
         </div>
     </header>
 
     <!-- Main -->
-    <main>
+    <main class="bio-main">
         <div class="container">
             
             <!-- Hero -->
-            <div class="hero-title">
-                <h2 class="glitch" data-text="ZERO50">
+            <div class="bio-hero">
+                <h2 class="glitch-text" data-text="ZERO50">
                     <span class="zero">ZERO</span><span class="fifty">50</span>
                 </h2>
                 <p class="subtitle">/// L'osservatore_disilluso.exe</p>
             </div>
 
             <!-- Content Grid -->
-            <div class="content-grid">
+            <div class="bio-content">
                 
                 <!-- Block 01: Origine -->
-                <div class="content-block">
+                <div class="bio-block">
                     <div class="block-number">01</div>
                     <div class="block-content">
                         <h3 class="block-title">Origine.txt</h3>
                         <div class="block-text">
                             <p><strong>Zero50</strong> non è un nome. È una frequenza. Uno stato mentale tra il vuoto (zero) e la metà del percorso (50). Sempre in bilico, sempre sul bordo per sentire meglio il vuoto.</p>
-                            <p style="margin-top: 1.5rem;">Non il ribelle che spacca tutto. L'osservatore che vede attraverso le maschere, il loop della routine, i sogni che diventano incubi e viceversa.</p>
+                            <p>Non il ribelle che spacca tutto. L'osservatore che vede attraverso le maschere, il loop della routine, i sogni che diventano incubi e viceversa.</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Block 02: UCT Project -->
-                <div class="content-block">
+                <div class="bio-block">
                     <div class="block-number">02</div>
                     <div class="block-content">
                         <h3 class="block-title">UCT_Progetto.log</h3>
                         <div class="block-text">
                             <p><strong>UNO CONTRO TUTTI</strong> non è un grido di guerra. È una constatazione.</p>
-                            <p style="margin-top: 1.5rem;">Dopo tempo dedicato a cose banali, questo è il progetto impegnato. Tre tracce che sono tre porte. Tre frequenze dello stesso grido:</p>
+                            <p>Dopo tempo dedicato a cose banali, questo è il progetto impegnato. Tre tracce che sono tre porte. Tre frequenze dello stesso grido:</p>
                             
-                            <div class="tracklist">
+                            <div class="tracklist-box">
                                 <h4>Tre Porte</h4>
-                                <div class="track-item">
+                                <div class="track-row">
                                     <div class="track-info">
                                         <strong>MONDO VECCHIO</strong>
                                         <span>La lucidità amara</span>
                                     </div>
-                                    <span style="color: var(--rosso);">3:21</span>
+                                    <span class="track-time">3:21</span>
                                 </div>
-                                <div class="track-item">
+                                <div class="track-row">
                                     <div class="track-info">
                                         <strong>ANIME PERDUTE</strong>
                                         <span>Il loop immenso</span>
                                     </div>
-                                    <span style="color: var(--rosso);">2:58</span>
+                                    <span class="track-time">2:58</span>
                                 </div>
-                                <div class="track-item">
+                                <div class="track-row">
                                     <div class="track-info">
                                         <strong>INCUBO/SOGNO</strong>
                                         <span>Il risveglio violento</span>
                                     </div>
-                                    <span style="color: var(--rosso);">3:45</span>
+                                    <span class="track-time">3:45</span>
                                 </div>
                             </div>
                         </div>
@@ -621,13 +121,13 @@
                 </div>
 
                 <!-- Block 03: Filosofia -->
-                <div class="content-block">
+                <div class="bio-block">
                     <div class="block-number">03</div>
                     <div class="block-content">
                         <h3 class="block-title">Filosofia.md</h3>
                         <div class="block-text">
                             <p>Questo non è rap per ballare. È rap per guardare dentro. Chi condivide il pensiero dietro le parole, capisce. Gli altri scorrono.</p>
-                            <p style="margin-top: 1.5rem;"><strong>Semi e scintille nella folla.</strong> Non merchandising. Non numeri. Messaggi che germinano.</p>
+                            <p><strong>Semi e scintille nella folla.</strong> Non merchandising. Non numeri. Messaggi che germinano.</p>
                         </div>
                     </div>
                 </div>
@@ -635,15 +135,15 @@
             </div>
 
             <!-- Quote -->
-            <div class="quote-block">
-                <p class="quote-text">La realtà è un'allucinazione condivisa. Ma con qualche svista.</p>
+            <div class="bio-quote">
+                <p class="quote-text">"La realtà è un'allucinazione condivisa. Ma con qualche svista."</p>
                 <p class="quote-author">— ZERO50</p>
             </div>
 
             <!-- Manifesto -->
-            <div class="manifesto">
+            <div class="bio-manifesto">
                 <h3>Manifesto_UCT</h3>
-                <ul class="manifesto-list">
+                <ul>
                     <li>Non invento fatti, mi esprimo come i gesti</li>
                     <li>Viaggio con la mente pure senza corpo</li>
                     <li>Siamo unici ma tutti uguali infondo</li>
@@ -653,13 +153,13 @@
             </div>
 
             <!-- CTA -->
-            <div class="cta-section">
-                <h2 style="font-size: 3rem; margin-bottom: 1rem;">Viaggio con due monete<br/>come un <span style="color: var(--rosso);">morto</span></h2>
-                <p style="color: #666; font-size: 0.9rem;">— Mondo Vecchio</p>
+            <div class="bio-cta">
+                <h2>Viaggio con due monete<br/>come un <span class="red">morto</span></h2>
+                <p class="cta-source">— Mondo Vecchio</p>
                 
                 <div class="cta-buttons">
-                    <a href="/index.html#tracks" class="btn btn-primary">Ascolta_le_tracce</a>
-                    <a href="/contatti.html" class="btn btn-secondary">Contatti</a>
+                    <a href="index.html#tracks" class="btn btn-primary">Ascolta_le_tracce</a>
+                    <a href="contatti.html" class="btn btn-secondary">Contatti</a>
                 </div>
             </div>
 
@@ -667,19 +167,25 @@
     </main>
 
     <!-- Footer -->
-    <footer>
+    <footer class="site-footer">
         <div class="footer-content">
             <div class="footer-info">
                 <p>© 2025 UCT // ZERO50</p>
-                <p style="margin-top: 0.3rem;">UNO_CONTRO_TUTTI.EXE v1.0</p>
+                <p>UNO_CONTRO_TUTTI.EXE v1.0</p>
             </div>
             
             <div class="footer-social">
-                <a href="https://instagram.com/zero50_uct" target="_blank">INSTAGRAM</a>
-                <a href="https://open.spotify.com/artist/zero50" target="_blank">SPOTIFY</a>
-                <a href="https://youtube.com/@zero50uct" target="_blank">YOUTUBE</a>
+                <a href="https://instagram.com/zero50_uct" target="_blank" rel="noopener noreferrer">INSTAGRAM</a>
+                <a href="https://open.spotify.com/artist/zero50" target="_blank" rel="noopener noreferrer">SPOTIFY</a>
+                <a href="https://youtube.com/@zero50uct" target="_blank" rel="noopener noreferrer">YOUTUBE</a>
+            </div>
+            
+            <div class="footer-powered">
+                <p>POWERED_BY <span class="red">EAR_MARKETING</span></p>
             </div>
         </div>
     </footer>
+
+    <script src="js/main.js"></script>
 </body>
 </html>
