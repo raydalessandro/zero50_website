@@ -1,6 +1,37 @@
-# 🎭 UCT - Uno Contro Tutti | Zero50
+# 🎭 UCT - ZERO50 | Deployment Guide
 
-> L'osservatore disilluso. Tre tracce, tre porte, una frequenza.
+> Dal rumore alla risonanza. Sempre.
+
+---
+
+## 📁 Struttura File Completa
+
+```
+uct-website/
+├── index.html              ✅ Homepage + Player + Tracce
+├── bio.html                ✅ Chi è Zero50 (da bio.html originale)
+├── press-kit.html          ✅ Materiale stampa (da Presskit.html originale)
+├── contatti.html           ✅ Form contatti + info
+├── shop.html               ⏳ Coming soon
+├── privacy.html            ⏳ Da creare (GDPR)
+│
+├── css/
+│   ├── style.css           ✅ Stili principali
+│   └── contatti.css        ✅ Stili pagina contatti
+│
+├── js/
+│   ├── main.js             ✅ Script principale
+│   └── contatti.js         ✅ Handler form contatti
+│
+├── assets/                 📦 Optional
+│   ├── audio/              🎵 MP3 tracce (quando disponibili)
+│   ├── images/             🖼️ Press photos
+│   └── downloads/          📄 Press kit files
+│
+├── README.md               📖 Questo file
+└── LICENSE                 ⚖️ MIT License
+
+```
 
 ---
 
@@ -9,252 +40,387 @@
 ### 1. Setup Repository
 
 ```bash
-# Crea il repository su GitHub
-# Nome: uct-website (o zero50-website)
+# Crea repository su GitHub
+# Nome suggerito: uct-website o zero50-official
 
 # Clona in locale
 git clone https://github.com/TUO_USERNAME/uct-website.git
 cd uct-website
 
-# Copia tutti i file
-# Struttura finale:
-# uct-website/
-# ├── index.html
-# ├── bio.html
-# ├── press-kit.html
-# ├── contatti.html
-# ├── shop.html (coming soon)
-# ├── privacy.html (da creare)
-# ├── README.md
-# └── assets/ (optional - per MP3, immagini)
+# Copia tutti i file del progetto
 ```
 
 ### 2. Commit & Push
 
 ```bash
 git add .
-git commit -m "🎭 UCT Launch - Dal rumore alla risonanza"
+git commit -m "🎭 UCT Launch - Sistema inizializzato"
 git push origin main
 ```
 
 ### 3. Attiva GitHub Pages
 
 1. Vai su **Settings** del repository
-2. Sezione **Pages**
+2. Sezione **Pages** (menu laterale)
 3. Source: **Deploy from a branch**
 4. Branch: **main** → Folder: **/ (root)**
-5. Save
+5. Clicca **Save**
 
-Il sito sarà live su: `https://TUO_USERNAME.github.io/uct-website/`
+⏳ Attendi 2-5 minuti
 
----
-
-## 📁 Struttura File
-
-```
-uct-website/
-├── index.html          # Homepage + Player + Tracce
-├── bio.html            # Chi è Zero50, progetto UCT
-├── press-kit.html      # Materiale stampa, download assets
-├── contatti.html       # Form contatti + social
-├── shop.html           # [TODO] Ecommerce
-├── privacy.html        # [TODO] Privacy Policy GDPR
-├── README.md           # Questo file
-└── assets/             # [OPTIONAL]
-    ├── audio/          # MP3 tracce
-    ├── images/         # Press photos
-    └── downloads/      # Press kit files
-```
+✅ Sito live su: `https://TUO_USERNAME.github.io/uct-website/`
 
 ---
 
-## ⚙️ Setup Tecnico
+## ⚙️ Configurazioni Obbligatorie
 
-### Form Contatti (contatti.html)
+### 1. Form Contatti (PRIORITÀ ALTA)
 
-**Opzione 1: Formspree (Consigliato)**
+**File da modificare:** `contatti.html` (linea ~50)
+
 ```html
-<!-- In contatti.html, sostituisci YOUR_FORM_ID -->
+<!-- SOSTITUISCI YOUR_FORM_ID -->
 <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
 ```
 
-1. Vai su [formspree.io](https://formspree.io)
-2. Crea account gratuito
-3. Crea nuovo form
-4. Copia il Form ID
-5. Sostituisci in `contatti.html` riga ~130
+**Setup Formspree:**
 
-**Opzione 2: EmailJS**
-Alternative più complessa ma con più controllo.
+1. Vai su [formspree.io](https://formspree.io)
+2. Registrati (gratis: 50 submit/mese)
+3. Crea nuovo form
+4. Copia il Form ID (es: `mzbqjkpl`)
+5. Sostituisci in `contatti.html`
+6. Test: invia messaggio di prova
+
+**Alternative:**
+- EmailJS (più complesso, più controllo)
+- Netlify Forms (se usi Netlify invece di GitHub Pages)
 
 ---
 
-### Audio Player Integration
+### 2. Link Social Reali
 
-**Quando hai gli MP3:**
+**File da modificare:** Tutti (cerca `https://instagram.com/zero50_uct`)
 
-1. Carica in `assets/audio/`
-2. In `index.html`, sostituisci i placeholder:
+Sostituisci con i link reali:
+- Instagram: `https://instagram.com/ACCOUNT_REALE`
+- Spotify: `https://open.spotify.com/artist/ID_ARTISTA`
+- YouTube: `https://youtube.com/@CANALE_REALE`
+
+**Cerca e sostituisci in:**
+- `index.html`
+- `bio.html`
+- `press-kit.html`
+- `contatti.html`
+
+---
+
+### 3. Email Contatti
+
+**File da modificare:** `contatti.html`
+
+Sostituisci le email placeholder:
+```html
+press@uctzero50.com      → EMAIL_REALE_STAMPA
+booking@uctzero50.com    → EMAIL_REALE_BOOKING
+collab@uctzero50.com     → EMAIL_REALE_COLLAB
+```
+
+---
+
+## 🎵 Integrazione Audio
+
+### Opzione 1: MP3 Locale (Sconsigliato per GitHub)
+
+**Attenzione:** GitHub ha limite 100MB per file.
+
+```bash
+# Crea cartella
+mkdir -p assets/audio
+
+# Copia MP3 (comprimi se >10MB ciascuno)
+cp mondo-vecchio.mp3 assets/audio/
+cp anime-perdute.mp3 assets/audio/
+cp incubo-sogno.mp3 assets/audio/
+```
+
+**Modifica** `index.html`:
 ```javascript
+// Cerca i placeholder e sostituisci
 audioUrl: "/assets/audio/mondo-vecchio.mp3"
 audioUrl: "/assets/audio/anime-perdute.mp3"
 audioUrl: "/assets/audio/incubo-sogno.mp3"
 ```
 
-**Alternative Streaming:**
-- Spotify Embed
-- SoundCloud Widget
-- YouTube Embed
+### Opzione 2: Spotify Embed (Consigliato)
 
----
+Quando le tracce sono su Spotify:
 
-### Analytics (Optional)
-
-**Plausible (Privacy-First, Consigliato)**
 ```html
-<!-- Aggiungi in <head> di tutte le pagine -->
-<script defer data-domain="TUO_DOMINIO.com" src="https://plausible.io/js/script.js"></script>
+<!-- Nel player, sostituisci con -->
+<iframe src="https://open.spotify.com/embed/track/TRACK_ID" 
+        width="100%" height="80" frameborder="0"></iframe>
+```
+
+### Opzione 3: SoundCloud Widget
+
+```html
+<iframe width="100%" height="166" scrolling="no" frameborder="no"
+        src="https://w.soundcloud.com/player/?url=URL_TRACCIA"></iframe>
 ```
 
 ---
 
-## 🎨 Customization
+## 📋 Checklist Pre-Launch
 
-### Colori Principali
+### Configurazione
+
+- [ ] Form contatti: Formspree ID inserito
+- [ ] Link social: URL reali inseriti
+- [ ] Email contatti: Indirizzi reali
+- [ ] Audio: Player configurato (locale o streaming)
+- [ ] `bio.html`: Presente e funzionante
+- [ ] `press-kit.html`: Presente e funzionante
+
+### Test Funzionalità
+
+- [ ] Form contatti: Invia messaggio di test
+- [ ] Navigation: Tutti i link funzionano
+- [ ] Mobile menu: Si apre/chiude correttamente
+- [ ] Track player: Expand/collapse funziona
+- [ ] Responsive: Test su mobile/tablet
+- [ ] Link esterni: Social aprono in nuova tab
+
+### Test Browser
+
+- [ ] Chrome
+- [ ] Safari
+- [ ] Firefox
+- [ ] Mobile Safari (iOS)
+- [ ] Mobile Chrome (Android)
+
+---
+
+## 🔒 Privacy & GDPR (DA FARE)
+
+### privacy.html - Template Base
+
+Crea file `privacy.html`:
+
+```html
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <title>Privacy Policy - UCT Zero50</title>
+    <!-- Copia <head> da index.html -->
+</head>
+<body>
+    <!-- Copia header da index.html -->
+    
+    <main style="padding: 150px 20px 50px;">
+        <div class="container" style="max-width: 900px;">
+            <h1>PRIVACY_POLICY.txt</h1>
+            
+            <h2>1. Titolare del Trattamento</h2>
+            <p>Zero50 / UCT<br>
+            Email: privacy@uctzero50.com</p>
+            
+            <h2>2. Dati Raccolti</h2>
+            <p>Tramite il form contatti raccogliamo:
+            - Nome/Alias
+            - Email
+            - Messaggio</p>
+            
+            <h2>3. Finalità</h2>
+            <p>Rispondere alle richieste ricevute.</p>
+            
+            <h2>4. Base Giuridica</h2>
+            <p>Consenso esplicito (flag privacy).</p>
+            
+            <h2>5. Conservazione</h2>
+            <p>I dati vengono conservati per 24 mesi.</p>
+            
+            <h2>6. Diritti dell'Interessato</h2>
+            <p>Hai diritto di:
+            - Accedere ai tuoi dati
+            - Richiederne la cancellazione
+            - Richiederne la modifica
+            Scrivi a: privacy@uctzero50.com</p>
+            
+            <h2>7. Cookie</h2>
+            <p>Questo sito non utilizza cookie di profilazione.</p>
+            
+            <p><strong>Ultimo aggiornamento:</strong> Gennaio 2025</p>
+        </div>
+    </main>
+    
+    <!-- Copia footer da index.html -->
+</body>
+</html>
+```
+
+**Nota Legale:** Questo è un template base. Per un sito professionale, consulta un legale per privacy conforme GDPR.
+
+---
+
+## 🎨 Personalizzazioni Future
+
+### Colori Brand
+
+File: `css/style.css` (righe 15-20)
+
 ```css
---nero: #000000
---bianco: #ffffff
---rosso: #dc2626 (rgb(220, 38, 38))
+:root {
+    --black: #000000;
+    --white: #ffffff;
+    --red: #dc2626;     /* ROSSO PRINCIPALE */
+    --gray-dark: #1a1a1a;
+    --gray-medium: #333333;
+    --gray-light: #666666;
+}
 ```
 
 ### Font
+
+Attuale: `Space Mono` (monospace)
+
+Per cambiare:
 ```css
-font-family: 'Space Mono', monospace;
+@import url('https://fonts.googleapis.com/css2?family=NUOVO_FONT');
+
+body {
+    font-family: 'NUOVO_FONT', monospace;
+}
 ```
-
----
-
-## 📋 TODO List
-
-### Pre-Launch
-- [ ] Sostituire `YOUR_FORM_ID` in contatti.html con ID Formspree reale
-- [ ] Creare `privacy.html` (GDPR compliant)
-- [ ] Aggiungere link social reali (Instagram, Spotify, YouTube)
-- [ ] Caricare MP3 tracce o integrare player esterno
-- [ ] Test form contatti
-- [ ] Test mobile su vari dispositivi
-
-### Post-Launch
-- [ ] Setup Google Search Console
-- [ ] Creare sitemap.xml
-- [ ] Aggiungere robots.txt
-- [ ] Setup dominio custom (opzionale)
-- [ ] Creare materiale press kit downloadable
-- [ ] Implementare newsletter signup (opzionale)
-
-### Shop (Fase 2)
-- [ ] Design shop.html
-- [ ] PayPal integration
-- [ ] Catalogo prodotti
-- [ ] Sistema ordini
-- [ ] Privacy & Termini shop
-
----
-
-## 🔒 Privacy & Legal
-
-### Da Creare
-
-**privacy.html**
-- Informativa GDPR
-- Uso cookie (se presenti)
-- Trattamento dati form contatti
-- Diritti utente
-
-**Minimo Essenziale:**
-```
-- Chi raccoglie i dati: Zero50 / UCT
-- Cosa raccoglie: Nome, Email, Messaggio (form)
-- Perché: Rispondere alle richieste
-- Come: Formspree (terza parte)
-- Quanto tempo: 2 anni
-- Diritti: Accesso, cancellazione, modifica
-- Contatto: privacy@uctzero50.com
-```
-
----
-
-## 🎯 SEO Basics
-
-### Meta Tags già presenti:
-✅ Title
-✅ Description
-✅ Open Graph
-
-### Da aggiungere:
-- [ ] `sitemap.xml`
-- [ ] `robots.txt`
-- [ ] Schema.org markup (MusicGroup)
-
----
-
-## 📱 Mobile Optimization
-
-✅ Responsive design (Tailwind)
-✅ Touch-friendly buttons
-✅ Mobile menu hamburger
-✅ Optimized typography
-
-**Test su:**
-- iPhone (Safari)
-- Android (Chrome)
-- Tablet
-
----
-
-## 🚨 Note Importanti
-
-### Audio Files
-- **Non committare MP3 pesanti su Git** (GitHub ha limit 100MB per file)
-- Usa GitHub Releases per file grandi
-- O hosting esterno (Spotify, SoundCloud)
-
-### Form Endpoint
-- **Formspree free plan**: 50 submissions/mese
-- Per più volume: upgrade o EmailJS
-
-### Performance
-- Immagini: max 500KB, usa WebP
-- Font: già ottimizzati (Google Fonts)
-- JS: tutto inline, zero librerie esterne pesanti
 
 ---
 
 ## 🛠️ Troubleshooting
 
-**Il sito non si vede dopo deploy?**
-- Aspetta 5-10 minuti dopo attivazione Pages
-- Controlla Settings > Pages sia impostato correttamente
-- Hard refresh browser (Ctrl+F5)
+### Sito non visibile dopo deploy
 
-**Form non funziona?**
-- Verifica Formspree ID sia corretto
-- Controlla console browser per errori
-- Testa email destinazione sia valida
+✅ **Soluzione:**
+- Attendi 5-10 minuti
+- Vai su Settings > Pages
+- Verifica branch sia `main` e folder `/  (root)`
+- Hard refresh: `Ctrl+F5` (Windows) o `Cmd+Shift+R` (Mac)
 
-**Audio non parte?**
-- Verifica path file MP3
-- Controlla formato supportato (MP3, AAC)
-- Browser blocca autoplay, serve click utente
+### Form non funziona
+
+✅ **Soluzione:**
+- Verifica Formspree ID corretto in `contatti.html`
+- Controlla console browser (F12) per errori
+- Test email destinazione valida su Formspree dashboard
+
+### Audio non parte
+
+✅ **Soluzione:**
+- Browser bloccano autoplay
+- Serve click utente per partire
+- Verifica path MP3 corretto
+- Controlla formato supportato (MP3 o AAC)
+
+### Mobile menu non si apre
+
+✅ **Soluzione:**
+- Verifica `js/main.js` caricato
+- Controlla console browser per errori JS
+- Test su device reale, non solo DevTools
+
+---
+
+## 📊 Analytics (Opzionale)
+
+### Plausible (Privacy-First, Consigliato)
+
+1. Registrati su [plausible.io](https://plausible.io)
+2. Aggiungi dominio
+3. Copia script snippet
+4. Incolla in `<head>` di tutti gli HTML:
+
+```html
+<script defer data-domain="TUO_DOMINIO.com" 
+        src="https://plausible.io/js/script.js"></script>
+```
+
+**Costo:** €9/mese (free trial disponibile)
+
+---
+
+## 🎯 SEO Basics
+
+### sitemap.xml
+
+Crea file `sitemap.xml`:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://TUO_DOMINIO.com/</loc>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://TUO_DOMINIO.com/bio.html</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://TUO_DOMINIO.com/press-kit.html</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://TUO_DOMINIO.com/contatti.html</loc>
+    <priority>0.8</priority>
+  </url>
+</urlset>
+```
+
+### robots.txt
+
+Crea file `robots.txt`:
+
+```
+User-agent: *
+Allow: /
+
+Sitemap: https://TUO_DOMINIO.com/sitemap.xml
+```
+
+---
+
+## 🌐 Dominio Custom (Opzionale)
+
+### Setup con Dominio Proprio
+
+1. Acquista dominio (es: `zero50.com`)
+2. GitHub Pages Settings > Custom domain
+3. Inserisci dominio
+4. Sul provider dominio, aggiungi record DNS:
+
+```
+Type: CNAME
+Name: www
+Value: TUO_USERNAME.github.io
+
+Type: A
+Name: @
+Value: 185.199.108.153
+Value: 185.199.109.153
+Value: 185.199.110.153
+Value: 185.199.111.153
+```
+
+5. Attendi propagazione DNS (4-48 ore)
+6. Attiva HTTPS su GitHub Pages
 
 ---
 
 ## 📞 Support
 
-**Tech Issues:**
-EAR Marketing - [alessiomarrone@outlook.com](mailto:alessiomarrone@outlook.com)
+**Tech Issues:**  
+EAR Marketing - alessiomarrone@outlook.com
 
-**Content/Strategy:**
+**Content Updates:**  
 Zero50 Management
 
 ---
@@ -275,5 +441,5 @@ Zero50 Management
 
 ## License
 
-© 2025 Zero50 / UCT. All rights reserved.
-Website code by EAR Marketing.
+© 2025 Zero50 / UCT. All rights reserved.  
+Website code: MIT License (vedi LICENSE file)
